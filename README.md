@@ -39,3 +39,36 @@ This hybrid approach balances statistical rigor with explainability which critic
 - Safety rails: Hard rules (e.g., $20k limit) enforce business constraints regardless of model confidence
 - Velocity checks: Rapid successive transactions are often fraudulent, easy to detect with simple thresholds
 
+## Real World Evolution Path
+### 1. Improved Feature Engineering
+For Production add more features including
+1. Device & Network: Does the IP address match the cardholder's location? Are they using a new device?
+2. Geographic Inconsistencies: Card used in New York at 2 PM, then Miami at 3 PM
+3. Social Graph: Is the merchant a known fraud site? Does it share common customers with other fraud cases?
+
+#### Why are these important
+1. Fraudsters will often spend in differnet locations than the User's hometown and can use a different device
+2. A $200 charge is fine at Target howver the same $200 on a random cryptocurrency exchange at 3 AM is suspicious
+
+#### Implementation
+1. Partner with payment processor to access device IDs, IP geolocation, VPN detection
+2. Integrate merchant blacklists (known scam sites, phishing URLs)
+3. Build a graph database of merchant to fraud case relationships
+
+### 2. Personalized Thresholds
+Currently thresholds are the same for all users. Thresholds should vary
+1. Segment users by risk profile: students (low spend), business owners (high spend), elderly (less likely using online purchases)
+2. Merchant-specific rules: Stricter rules for high-risk merchants (casinos, wire transfers, cryptocurrency)
+3. Time-based rules: Different thresholds for big holidays such as Christmas or Black Friday vs a regular day
+
+#### Why these are important
+1. $3000 for a buisness is nothing but for a student, this could be their entire account so it's important the transaction is stopped
+2. Elderly people are generally not spending much online compared to the average middle aged person
+3. Should not stop big transcations on big holidays as could reesult in users getting frustrated that their transaction is not going through
+
+#### Implementation
+1. Segment cardholder database into 10–20 risk cohorts (age, income, usage patterns, history)
+2. Calibrate thresholds separately for each cohort using past dispute data
+3. Adjust thresholds monthly based on business metrics (fraud loss, customer complaints, operational cost)
+
+
