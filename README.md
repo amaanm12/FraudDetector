@@ -47,8 +47,8 @@ For Production add more features including
 3. Social Graph: Is the merchant a known fraud site? Does it share common customers with other fraud cases?
 
 #### Why are these important
-1. Fraudsters will often spend in differnet locations than the User's hometown and can use a different device
-2. A $200 charge is fine at Target howver the same $200 on a random cryptocurrency exchange at 3 AM is suspicious
+1. Fraudsters will often spend in different locations than the User's hometown and can use a different device
+2. A $200 charge is fine at Target however the same $200 on a random cryptocurrency exchange at 3 AM is suspicious
 
 #### Implementation
 1. Partner with payment processor to access device IDs, IP geolocation, VPN detection
@@ -64,11 +64,26 @@ Currently thresholds are the same for all users. Thresholds should vary
 #### Why these are important
 1. $3000 for a buisness is nothing but for a student, this could be their entire account so it's important the transaction is stopped
 2. Elderly people are generally not spending much online compared to the average middle aged person
-3. Should not stop big transcations on big holidays as could reesult in users getting frustrated that their transaction is not going through
+3. Should not stop big transactions on big holidays as could result in users getting frustrated that their transaction is not going through
 
 #### Implementation
 1. Segment cardholder database into 10–20 risk cohorts (age, income, usage patterns, history)
 2. Calibrate thresholds separately for each cohort using past dispute data
 3. Adjust thresholds monthly based on business metrics (fraud loss, customer complaints, operational cost)
+
+### 3. Real Time Processing
+Currrently, trains once on historical data and processes transactions one at a time in batch. For Production
+1. Subsecond decision latency: Transactions must be approved/declined before the customer leaves the register (< 200ms)
+2. Continuous learning: Model should update hourly or daily as new fraud patterns emerge, not quarterly
+3. High throughput: Should process 1,000s of transactions per second
+
+#### Implementation
+1. Deploy model to stream processing infrastructure such as AWS Kinesis instead of batch jobs
+2. Pre-compute user profiles in a fast cache like Redis so lookups are instant and background jobs update cache every minute
+3. Use model serving infrastructure  like TensorFlow Serving that keeps copies of current model in memory
+4. Set up automated retraining: Daily scheduled jobs that train new models on yesterday's transactions
+
+
+
 
 
