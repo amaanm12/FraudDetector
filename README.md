@@ -8,3 +8,8 @@ A two-stage anomaly detection system combining Isolation Forest (unsupervised ou
   scikit-learn
   kagglehub
   ```
+## Installation
+1. Install Required Python Packages
+```python
+python -m pip install pandas numpy scikit-learn kagglehub
+```
